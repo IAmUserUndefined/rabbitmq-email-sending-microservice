@@ -1,12 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import RabbitMQ from "./providers/RabbitMQ/RabbitMQ";
-import SendMail from "./classes/SendMail/SendMail";
+import Mail from "./providers/Mail/Mail";
 import IPayload from "./interfaces/IPayload";
 
-const bootstrap = async () => {
+const rabbit = new RabbitMQ();
+const mail = new Mail();        
 
-	const rabbit = new RabbitMQ();
+const bootstrap = async () => {
 	await rabbit.start();
 	await rabbit.consume("request-send-email", async (message) => { 
 
@@ -14,8 +15,11 @@ const bootstrap = async () => {
 		const payload: IPayload = JSON.parse(content);
 		const { subject, emailBody, email, token, url } = payload;
         
-		const sendEmail = new SendMail();        
-		const response = await sendEmail.execute({ subject, emailBody, email, token, url });
+		const response = await mail.sendMail(email, subject, emailBody, {
+			appUrl: url,
+			email: email,
+			token: token
+		});
 
 		await rabbit.publishInQueue("response-send-email", response);
 	});

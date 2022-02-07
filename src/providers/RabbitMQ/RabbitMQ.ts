@@ -16,10 +16,6 @@ export default class RabbitMQ implements IRabbitMQ {
 		return this.channel.sendToQueue(queue, Buffer.from(message));
 	}
 
-	async publishInExchange(exchange: string, routingKey: string,message: string): Promise<boolean> {
-		return this.channel.publish(exchange, routingKey, Buffer.from(message));
-	}
-
 	async consume(queue: string, callback: (message: Message) => void): Promise<Replies.Consume> {
 		return this.channel.consume(queue, (message) => {
 			callback(message);
