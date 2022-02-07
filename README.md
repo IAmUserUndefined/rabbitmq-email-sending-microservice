@@ -33,7 +33,7 @@ Após executar os testes, faça a composição com os containers que possibilita
 ```sh
   docker-compose up -d
 ```
-Após fazer a composição dos containers, rode o seguinte comando:
+Após fazer a composição dos containers entre na url http://localhost:5672 e crie as filas request-send-email e response-send-email, após isso rode o seguinte comando:
 ```sh
   yarn dev
 ```
